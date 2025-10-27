@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 """
-Interaktive Webplattform für Grundstücksanalyse in Hamburg
-Features:
-- Dashboard mit Statistiken und Visualisierungen
-- Interaktive Karte mit allen Grundstücken
-- Preisanalysen und Vergleiche
-- Filterfunktionen
+Interaktive Webplattform für Grundstücksanalyse in Hamburg - PRODUCTION VERSION
 """
 
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import folium
 from folium import plugins
 import json
@@ -152,29 +146,23 @@ def create_scatter_plot():
 
 def create_map():
     """Erstellt interaktive Karte mit allen Grundstücken"""
-    # Filtere Daten mit gültigen Koordinaten
     df_map = df.dropna(subset=['latitude', 'longitude', 'purchase_price'])
     
-    # Zentrum von Hamburg
     center_lat = df_map['latitude'].mean()
     center_lng = df_map['longitude'].mean()
     
-    # Karte erstellen
     m = folium.Map(
         location=[center_lat, center_lng],
         zoom_start=11,
         tiles='OpenStreetMap'
     )
     
-    # Marker Cluster für bessere Performance
     marker_cluster = plugins.MarkerCluster().add_to(m)
     
-    # Farbskala für Preise
     min_price = df_map['price_per_sqm'].min()
     max_price = df_map['price_per_sqm'].max()
     
     def get_color(price_sqm):
-        """Bestimmt Farbe basierend auf Preis/m²"""
         if pd.isna(price_sqm):
             return 'gray'
         normalized = (price_sqm - min_price) / (max_price - min_price)
@@ -185,7 +173,6 @@ def create_map():
         else:
             return 'red'
     
-    # Marker hinzufügen
     for idx, row in df_map.iterrows():
         popup_html = f"""
         <div style="width:300px">
@@ -205,7 +192,6 @@ def create_map():
             icon=folium.Icon(color=get_color(row['price_per_sqm']), icon='home', prefix='fa')
         ).add_to(marker_cluster)
     
-    # Legende hinzufügen
     legend_html = '''
     <div style="position: fixed; 
                 bottom: 50px; right: 50px; width: 200px; height: 120px; 
@@ -224,7 +210,6 @@ def create_map():
 @app.route('/')
 def index():
     """Hauptseite mit Dashboard"""
-    # Statistiken berechnen
     stats = {
         'total_count': len(df),
         'avg_price': df['purchase_price'].mean(),
@@ -236,7 +221,6 @@ def index():
         'max_price': df['purchase_price'].max()
     }
     
-    # Charts erstellen
     charts = {
         'price_dist': create_price_distribution_chart(),
         'area_dist': create_area_distribution_chart(),
@@ -278,7 +262,9 @@ if __name__ == '__main__':
     print(f"   • {df['district'].nunique()} Stadtteile")
     print(f"   • Durchschnittspreis: €{df['purchase_price'].mean():,.0f}")
     print(f"   • Durchschnittliche Fläche: {df['plot_area'].mean():.0f} m²")
-    print(f"\n🌐 Server startet auf: http://localhost:5000")
+    print(f"\n🌐 Server startet...")
     print("="*60 + "\n")
     
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    # WICHTIG: Port von Umgebungsvariable lesen (für Render.com/Heroku/Railway)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
