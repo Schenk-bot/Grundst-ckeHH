@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karte - Grundstücke Hamburg</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            margin: 0;
+        }
+        .container-main {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+            max-width: 1400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: 700px;
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="container-main">
+            <a href="/" class="btn-back">← Zurück zum Dashboard</a>
+            
+            <h1 class="text-center">🗺️ Interaktive Karte - Grundstücke in Hamburg</h1>
+            
+            <div class="info-box">
+                <p class="mb-0">
+                    <strong>💡 Hinweis:</strong> Klicke auf die Marker um Details zu den Grundstücken zu sehen. 
+                    Die Farben zeigen das Preisniveau: 🟢 Günstig | 🟠 Mittel | 🔴 Teuer
+                </p>
+            </div>
+
+            <div class="map-container">
+                {{ map_html|safe }}
+            </div>
+
+            <div class="text-center mt-4" style="color: #666;">
+                <p>📍 Alle verfügbaren Grundstücke in Hamburg visualisiert</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
